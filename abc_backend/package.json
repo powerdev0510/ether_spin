@@ -16,9 +16,11 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-eslint": "^7.2.3",
     "babel-preset-env": "^1.6.1",
-    "eslint": "^4.10.0",
+    "eslint": "^3.5.0",
     "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-async-await": "0.0.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-promise": "^3.6.0",
