@@ -1,0 +1,56 @@
+@import 'utils';
+
+.input {
+  background-color: #f8f9fa;
+  position: relative;
+  bottom: 0px;
+  height: 70px;
+  text-align: center;
+  width: 100%;
+  box-shadow: 0px -5px 10px -5px rgba(0,0,0,.20);
+
+  //added by 12.21 begin
+    // display: flex;
+    // justify-content: space-between;
+    // align-items: center;
+    // padding: 0 2rem;
+    // border: 1px solid material-color('grey', '200');
+
+  transition: background-color 2s;
+  &.controlled {
+      background-color: #fff9db;
+  }
+
+  .message {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 86px;
+      text-align: left;
+
+      // added new 12.21 
+        height: 100%;
+
+      input {
+          width: 100%;
+          border: 0px solid;
+          background-color: transparent;
+          font-size: 18px;
+          &:focus {
+              outline: none;
+          }
+
+          // added new 12.21 
+            height: 100%;
+      }
+  }
+
+  .send-button {
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+
+  }
+}

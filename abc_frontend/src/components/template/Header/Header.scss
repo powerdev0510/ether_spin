@@ -1,3 +1,14 @@
+@import 'utils';
+
 .header {
-  
+  background: rgb(135, 79, 79);
+  height: 7rem;
+  display: flex;
+  padding: 1rem;
+  .loger{
+    flex: 1;
+    font-size: 3rem;
+    font-style: italic;
+    color: white;
+  }
 }

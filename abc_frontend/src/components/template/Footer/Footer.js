@@ -7,7 +7,9 @@ const cx = classNames.bind(styles);
 const Footer = () => {
   return (
     <div className={cx('footer')}>
-      Footer
+      <div className={cx('contact')}>
+        www.bitcoin.porker
+      </div>
     </div>
   );
 };

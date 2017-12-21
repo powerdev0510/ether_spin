@@ -7,7 +7,7 @@ const cx = classNames.bind(styles);
 const Header = ({onClickButton}) => {
   return (
     <div className={cx('header')}>
-      <button onClick={onClickButton}>Header</button>
+      <a className={cx('loger')} onClick={onClickButton}>BitCoin Poker</a>
     </div>
   );
 };
