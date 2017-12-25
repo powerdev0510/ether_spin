@@ -7,7 +7,9 @@ const isDev = process.env.NODE_ENV === 'development';
 const devtools = isDev && window.devToolsExtension 
   ? window.devToolsExtension
   : () => fn => fn;
-  
+
+let store;
+
 const configureStore = (initialState) => {
   const enhancers = [
     applyMiddleware(
@@ -16,9 +18,10 @@ const configureStore = (initialState) => {
     devtools()
   ];
 
-  const store = createStore(modules, initialState, compose(...enhancers));
+  store = createStore(modules, initialState, compose(...enhancers));
 
   return store;
 };
 
-export default configureStore;
+export { configureStore as default, store };
+// export default configureStore;

@@ -1,10 +1,61 @@
 import React, { Component } from 'react'
+
+// redux
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as baseActions from 'store/modules/base';
+import * as chatActions from 'store/modules/chat';
+
 import { Screen, MessageList, Input } from 'components';
 import { Scrollbars } from 'react-custom-scrollbars';
 
-
+import * as socket from 'socket';
+import * as socketHelper from 'socket/helper';
+import sender from 'socket/packetSender';
+import {client as SEND} from 'socket/packetTypes';
 
 class ChatBox extends Component {
+
+    componentDidMount() {
+        // const {params, UIActions, ChannelActions} = this.props;
+        const { ChatActions } = this.props;
+        ChatActions.initialize('abc');
+
+        // UIActions.initialize('channel');
+        // ChannelActions.initialize(params.username);
+        // UIActions.setHeaderTransparency(false);
+        // UIActions.setFooterVisibility(false);
+
+        // disable overflow for 0.7 seconds
+        document.body.style.overflow = "hidden";
+        setTimeout(() => {
+            document.body.style.overflow = ""
+        }, 700);
+
+
+        this.connectToChannel();
+
+    }
+
+    connectToChannel = async () => {
+        // const {params, ChannelActions, intl} = this.props;
+        // const { ChatActions } = this.props;
+        // console.log(this.props);
+
+        // const promises = [
+        //     ChannelActions.getRecentMsg(params.username),
+        //     ChannelActions.getStatusMessage(params.username)
+        // ];
+
+        // try {
+        //     await Promise.all(promises);
+        // } catch(e) {
+        //     console.log(e);
+        // }
+
+        socket.init();
+        // this.handleShowStatusMessage();
+    }
 
     handleFailure = () => {
         console.log('handleFailure evented!');
@@ -12,16 +63,39 @@ class ChatBox extends Component {
     handleRemove = () => {
         console.log('handleRemove evented!');
     }
-    handleSend = () => {
+    handleSend = (message) => {
         console.log('handleSend evented!');
+
+        // const {status, ChannelActions, FormActions} = this.props;
+        const {status, ChatActions} = this.props;
+        const uID = socketHelper.generateUID();
+        const data = {
+            message,
+            uID
+        };
+        sender.message(data);
+        ChatActions.writeMessage({
+            type: SEND.MSG,
+            payload: {
+                anonymous: true, // status.identity === 'anonymous', // to do 
+                date: (new Date()).getTime(),
+                message,
+                uID,
+                suID: uID,
+                username: status.socket.username
+            }
+        });
+        // this.scrollToBottom();
     }
 
     render () {
-        const status ={
-            chatData: [],
+        const status1 = {
+            chatData : [],
             top: false
         };
-
+        const { status }= this.props;
+        console.log('[ChatBox] render func()');
+        console.log(status.chatData);
         const {handleFailure, handleRemove, handleSend} = this;
 
         return (
@@ -39,7 +113,7 @@ class ChatBox extends Component {
                 <MessageList
                     data={status.chatData}
                     channel={'params.username'}
-                    showLoader={!status.top}
+                    showLoader={!status1.top}
                     onFailure={handleFailure}
                     onRemove={handleRemove}
                     onSend={handleSend}/>
@@ -50,4 +124,28 @@ class ChatBox extends Component {
     }
 }
 
-export default ChatBox
+export default connect(
+    (state) => ({
+        status: {
+        // channelName: state.channel.info.username,
+        // chatState: state.ui.channel.chat,
+        // session: state.auth.session,
+        socket: state.chat.getIn(['chat','socket']).toJS(),
+        identity: state.chat.getIn(['chat','identity']),
+        chatData: state.chat.getIn(['chat','data']).toJS(),
+        // tempDataIndex: state.channel.chat.tempDataIndex,
+        // top: state.channel.chat.top,
+        // clientHeight: state.ui.clientSize.height,
+        // userList: state.channel.chat.userList,
+        // userCount: state.channel.chat.userList.length,
+        // connected: state.channel.chat.socket.enter,
+        // onlineList: state.ui.channel.chat.onlineList,
+        // statusMessage: state.channel.chat.statusMessage,
+        // statusMessageVisibility: state.ui.channel.chat.statusMessage
+        username : state.chat.get(['info', 'username'])
+        }
+    }),
+    (dispatch) => ({
+      ChatActions: bindActionCreators(chatActions, dispatch)
+    })
+  )(ChatBox);

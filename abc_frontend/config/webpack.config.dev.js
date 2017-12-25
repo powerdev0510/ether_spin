@@ -170,6 +170,7 @@ module.exports = {
         loader: require.resolve('babel-loader'),
         options: {
         plugins: [
+          'transform-regenerator',
           'react-hot-loader/babel'
         ],
         // This is a feature of `babel-loader` for webpack (not Babel itself).
