@@ -1,0 +1,12 @@
+.hide-on-mobile {
+    @include media("<=xsmall") {
+        display: none !important;
+    }
+}
+
+.hide-on-desktop {
+    @include media(">xsmall") {
+        display: none !important;
+    }
+}
+

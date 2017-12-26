@@ -171,7 +171,7 @@ module.exports = {
         options: {
         plugins: [
           'transform-regenerator',
-          'react-hot-loader/babel'
+          // 'react-hot-loader/babel'
         ],
         // This is a feature of `babel-loader` for webpack (not Babel itself).
         // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -224,8 +224,9 @@ module.exports = {
             loader: require.resolve('css-loader'),
             options: {
               importLoaders: 1,
-              modules: true,
-              localIdentName: '[name]__[local]__[hash:base64:5]'
+              modules: true
+              //,localIdentName: '[name]__[local]__[hash:base64:5]'
+              ,localIdentName: '[local]'
             },
           },
           {

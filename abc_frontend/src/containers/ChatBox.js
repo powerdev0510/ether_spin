@@ -3,7 +3,6 @@ import React, { Component } from 'react'
 // redux
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as baseActions from 'store/modules/base';
 import * as chatActions from 'store/modules/chat';
 
 import { Screen, MessageList, Input } from 'components';
