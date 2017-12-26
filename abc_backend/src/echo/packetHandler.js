@@ -40,8 +40,8 @@ const test1 = (connection, payload) => {
   const ch = channel.get(connection.data.channel);
 
   ch.broadcast(helper.createAction(SEND.MSG, {
-      anonymous: connection.data.anonymous,
-      username: connection.data.username,
+      anonymous: true, //connection.data.anonymous,
+      username: '', // connection.data.username,
       message: payload.message,
       date: (new Date()).getTime(),
       uID: payload.uID,

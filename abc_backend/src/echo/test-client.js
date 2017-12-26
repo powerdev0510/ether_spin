@@ -64,7 +64,6 @@ const initConnection = () => {
         start();
     };
     socket.onmessage = function (e) {
-        console.log('Hahahahah');
         console.log(e.data);
     };
     socket.onclose = function () {
