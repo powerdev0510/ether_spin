@@ -69,7 +69,7 @@ const service = {
                 break;
             case 3:
                 notify({type: 'warning', message: _intl.formatMessage(messages.tooMany)});
-                if(store.getState().channel.chat.socket.controlled) break;
+                if(store.getState().chat.getIn(['chat','socket','controlled'])) break;
                 setSocketState({controlled: true});
                 setTimeout(
                     () => {

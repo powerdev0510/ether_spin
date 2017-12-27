@@ -19,6 +19,12 @@ import { prepareMessages } from 'locale/helper';
 
 class ChatBox extends Component {
 
+    state = {
+        clientHeight: 0,
+        prevScrollHeight: 0,
+        loading: false
+    };
+
     componentDidMount() {
         // const {params, UIActions, ChannelActions} = this.props;
         // const { ChatActions } = this.props;
@@ -103,14 +109,78 @@ class ChatBox extends Component {
                 username: status.socket.username
             }
         });
-        // this.scrollToBottom();
+        this.scrollToBottom();
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        
+        // update when client resize
+        if (nextProps.status.clientHeight !== this.props.status.clientHeight) {
+            return true;
+        }
+
+        // loading status won't affect rendering
+        // prevScrollHeight won't affect rendering'
+        if (nextState.loading !== this.state.loading) {
+            return false;
+        }
+
+        const checkDiff = () => {
+            if (nextProps.status.chatData.length > 0) {
+                if (nextProps.status.chatData.length !== this.props.status.chatData.length) {
+                    return true;
+                }
+
+                // check tempIndexes
+                for (let index of this.props.status.tempDataIndex) {
+                    if (nextProps.status.chatData[index].payload.suID !== this.props.status.chatData[index].payload.suID) {
+                        return true;
+                    }
+                }
+                return false;
+            } else {
+                return false;
+            }
+        }
+
+        const compareObject = JSON.stringify({
+            ...this.props.status,
+            chatData: null
+        }) !== JSON.stringify({
+            ...nextProps.status,
+            chatData: null
+        });
+
+        // if compareObject is false, it will do checkDiff
+        return compareObject || checkDiff();
+
+    }
+    
+    componentDidUpdate(prevProps, prevState) {
+        
+        const scrollHeight = this.scrollBox.getScrollHeight();
+
+        if (prevProps.status.chatData.length !== this.props.status.chatData.length) {
+            const scrollTop = this.scrollBox.getScrollTop();
+            const clientHeight = this.scrollBox.getClientHeight();
+            if(scrollHeight - scrollTop - clientHeight < 300 || this.state.prevScrollHeight - clientHeight < 300) {
+                this.scrollToBottom();
+            }
+        }
+
+        this.setState({
+            prevScrollHeight: scrollHeight
+        });
+    }
+
+    scrollToBottom = () => {
+        // SCROLL TO BOTTOM
+        this
+            .scrollBox
+            .scrollTop(this.scrollBox.getScrollHeight());
     }
 
     render () {
-        const status1 = {
-            chatData : [],
-            top: false
-        };
         const { status }= this.props;
         console.log('[ChatBox] render func()');
         console.log(status.chatData);
@@ -131,7 +201,7 @@ class ChatBox extends Component {
                 <MessageList
                     data={status.chatData}
                     channel={'all'}
-                    showLoader={!status1.top}
+                    showLoader={!status.top}
                     onFailure={handleFailure}
                     onRemove={handleRemove}
                     onSend={handleSend}/>
@@ -151,8 +221,8 @@ export default connect(
         socket: state.chat.getIn(['chat','socket']).toJS(),
         identity: state.chat.getIn(['chat','identity']),
         chatData: state.chat.getIn(['chat','data']).toJS(),
-        // tempDataIndex: state.channel.chat.tempDataIndex,
-        // top: state.channel.chat.top,
+        tempDataIndex: state.chat.getIn(['chat','tempDataIndex']).toJS(),
+        top: state.chat.getIn(['chat', 'top']),
         // clientHeight: state.ui.clientSize.height,
         // userList: state.channel.chat.userList,
         // userCount: state.channel.chat.userList.length,
