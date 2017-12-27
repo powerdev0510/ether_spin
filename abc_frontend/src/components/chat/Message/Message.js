@@ -52,10 +52,13 @@ class Message extends Component {
     }
 
     generateColor = (username) => {
+
         let alteredCharSum = Math.pow(charSum(this.props.channel) + 31 * charSum(username), 3) + '';
         alteredCharSum = alteredCharSum.slice(-6);
         let rgb = alteredCharSum.match(/.{1,2}/g).map(s=>90 + parseInt(s));
+        
         return {color: `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`};
+        // return {color: `rgb(255,0,192)`};
     }
 
     shouldComponentUpdate(nextProps, nextState) {
