@@ -120,7 +120,7 @@ exports.localLogin = async (ctx) => {
   const schema = Joi.object({
     displayName: Joi.string().regex(/^[a-zA-Z0-9ㄱ-힣]{3,12}$/).required(),
     // email: Joi.string().email().required(),
-    password: Joi.string().min(6).max(30)
+    password: Joi.string().min(5).max(30)
   });
   
   const result = Joi.validate(body, schema);

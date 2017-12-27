@@ -88,7 +88,11 @@ export default handleActions({
   },
   
   [SET_SOCKET_STATE]: (state, action) => {
-    return state.setIn(['chat', 'socket'], action.payload);
+    console.log('[TEST:02](action.payload)----------->');
+    console.log(action.payload);
+    const { auth, username } = action.payload;
+    return state.setIn(['chat', 'socket', 'auth'], auth)
+                .setIn(['chat', 'socket', 'username'], username);
     // return state.setIn(['test', 'mode'], action.payload);
   },
 
@@ -101,37 +105,47 @@ export default handleActions({
     // console.log(temp);
     const temp = state1.getIn(['chat', 'tempDataIndex']).toJS();
     
-    return state1.setIn(['chat', 'tempDataIndex'], fromJS([...temp, state1.getIn(['chat', 'data']).toJS().length]));
+    return state1.setIn(['chat', 'tempDataIndex'], fromJS([...temp, state1.getIn(['chat', 'data']).toJS().length-1]));
   },
 
   [RECEIVE_REALTIME_DATA]: (state, action) => {
+    if( state.getIn(['chat', 'tempDataIndex']).toJS().length < 1) {
+      const data = state.getIn(['chat', 'data']).toJS();
+      const new_data = [...data, ...action.payload];
+      return state.setIn(['chat', 'data'], fromJS(new_data));
+    }
     // return {...state};
     console.log(action.payload);
     let tempData = null;
     let indexes = null;
 
-    // for (let packet of action.payload) {
-    //   if (packet.type === 'MSG') {
-    //     // store tempData if null
-    //     if (!tempData) 
-    //       tempData = state.getIn(['chat', 'data']).toJS();
-    //     if (!indexes) 
-    //       indexes = state.getIn(['chat', 'tempDataIndex']).toJS();
+    for (let packet of action.payload) {
+      const username = state.getIn(['chat', 'socket', 'username']);
+      console.log('[TEST:01(username)]-------->DATA: ' +  username);
+      if (packet.type === 'MSG' && packet.payload.username === username) {
+        // store tempData if null
+        if (!tempData) 
+          tempData = state.getIn(['chat', 'data']).toJS();
+        if (!indexes) 
+          indexes = state.getIn(['chat', 'tempDataIndex']).toJS();
 
-    //     for (let i = 0; i < indexes.length; i++) {
-    //       let index = indexes[i];
-    //       if (tempData[index].payload.uID === packet.payload.uID) {
-
-    //       }          
-    //     }
-    //   }
-    // }
+        for (let i = 0; i < indexes.length; i++) {
+          let index = indexes[i];
+          if (tempData[index].payload.uID === packet.payload.uID) {
+            tempData[index] = packet;
+            indexes = [
+                ...indexes.slice(0, i),
+                ...indexes.slice(i + 1, indexes.length)
+            ];
+            console.log(packet, i, index);
+          }          
+        }
+      }
+    }
 
     if(tempData){
-      console.log('first conditio!!!');
-      console.log(tempData);
-      console.log(indexes);
       // there was some modification
+      console.log('[TEST:03(modifi)]-------->DATA: ' + JSON.stringify(tempData));
       return state.setIn(['chat', 'data'], fromJS(tempData))
         .setIn(['chat', 'tempDataIndex'], fromJS(indexes));
     }

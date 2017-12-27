@@ -21,8 +21,8 @@ class ChatBox extends Component {
 
     componentDidMount() {
         // const {params, UIActions, ChannelActions} = this.props;
-        const { ChatActions } = this.props;
-        ChatActions.initialize('abc');
+        // const { ChatActions } = this.props;
+        // ChatActions.initialize('abc');
 
         // UIActions.initialize('channel');
         // ChannelActions.initialize(params.username);
@@ -88,7 +88,7 @@ class ChatBox extends Component {
         ChatActions.writeMessage({
             type: SEND.MSG,
             payload: {
-                anonymous: true, // status.identity === 'anonymous', // to do 
+                anonymous: false, // to do 
                 date: (new Date()).getTime(),
                 message,
                 uID,
@@ -123,7 +123,7 @@ class ChatBox extends Component {
             }}>
                 <MessageList
                     data={status.chatData}
-                    channel={'params.username'}
+                    channel={'all'}
                     showLoader={!status1.top}
                     onFailure={handleFailure}
                     onRemove={handleRemove}
@@ -141,7 +141,7 @@ export default connect(
         // channelName: state.channel.info.username,
         // chatState: state.ui.channel.chat,
         session: state.auth.get('session').toJS(),
-        socket: state.chat.getIn(['chat','socket']),
+        socket: state.chat.getIn(['chat','socket']).toJS(),
         identity: state.chat.getIn(['chat','identity']),
         chatData: state.chat.getIn(['chat','data']).toJS(),
         // tempDataIndex: state.channel.chat.tempDataIndex,
