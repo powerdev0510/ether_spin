@@ -10,6 +10,8 @@ import ko from 'react-intl/locale-data/ko';
 import getLang from 'helpers/getLang';
 import storage from 'helpers/storage';
 import * as socket from 'socket';
+import { hot } from 'react-hot-loader'
+
 
 // socket.configure(intl);
 socket.init();
@@ -33,4 +35,4 @@ const Root = ({store}) => {
   );
 };
 
-export default Root;
+export default hot(module)(Root);
