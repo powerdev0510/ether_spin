@@ -41,10 +41,9 @@ class ChatBox extends Component {
     }
 
     connectToChannel = async () => {
-        // const {params, ChannelActions, intl} = this.props;
+        const {params, ChatActions, intl} = this.props;
         // const { ChatActions } = this.props;
         // console.log(this.props);
-        const {intl} = this.props;
 
         // const promises = [
         //     ChannelActions.getRecentMsg(params.username),
@@ -56,6 +55,14 @@ class ChatBox extends Component {
         // } catch(e) {
         //     console.log(e);
         // }
+
+        // get recent message
+
+        try{
+            ChatActions.getRecentMsg();
+        }catch( e ) {
+            console.log(e);
+        }
 
         // socket.init();
         // this.handleShowStatusMessage();

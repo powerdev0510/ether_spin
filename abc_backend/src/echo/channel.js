@@ -79,7 +79,7 @@ function Channel(name) {
         for(let i = 0; i < this.users.length; i++) {
             emit(sockets[this.users[i]], data);
         }
-/*        
+        
         //({suID, type, channel, anonymous, username, message}
         const result = await Message.write({
             suID: data.payload.suID,
@@ -89,8 +89,7 @@ function Channel(name) {
             username: data.payload.username,
             message: data.payload.message
         });
-*/        
-
+        
 
         // only handle MSGs
         if(data.type !== "MSG") {

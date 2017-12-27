@@ -1,6 +1,8 @@
 import { createAction, handleActions } from 'redux-actions';
 
 import { Map, List, fromJS, toJS } from 'immutable';
+import * as ChatApi from 'api/chat';
+import { pender } from 'redux-pender';
 
 // action types
 const TEST_ACTION = 'chat/TEST_ACTION';
@@ -13,6 +15,8 @@ const RECEIVE_REALTIME_DATA = 'chat/RECEIVE_REALTIME_DATA';
 const WRITE_MESSAGE = 'chat/WRITE_MESSAGE';
 const MESSAGE_FAILURE = 'chat/MESSAGE_FAILURE';
 const REMOVE_MESSAGE = 'chat/REMOVE_MESSAGE';
+
+const GET_RECENT_MSG = 'chat/GET_RECENT_MSG';
 
 // action creator
 export const doTestAction = createAction(TEST_ACTION); // test redux
@@ -32,6 +36,7 @@ export const receiveRealtimeData = createAction(RECEIVE_REALTIME_DATA);
 export const writeMessage = createAction(WRITE_MESSAGE);
 export const messageFailure = createAction(MESSAGE_FAILURE);
 export const removeMessage = createAction(REMOVE_MESSAGE);
+export const getRecentMsg = createAction(GET_RECENT_MSG, ChatApi.getRecentMsg);
 
 // initial state
 
@@ -154,4 +159,37 @@ export default handleActions({
     console.log(temp);
     return state.setIn(['chat', 'data'], fromJS([...temp, ...action.payload]));
   },
+
+  ...pender({
+    type: GET_RECENT_MSG,
+    onSuccess: (state, action) => {
+      const { data: result } = action.payload;
+      console.log('+++++++++++++++++++++++++');
+      console.log(result);
+      // return state;
+      const messages = mapDataToMessages(result.messages);
+      return state.setIn(['chat', 'data'], fromJS(messages))
+           .setIn(['chat', 'top'], messages.length < 10)
+           .setIn(['chat', 'lastInitId'], messages[messages.length - 1].payload.suID);
+    },
+    onFailure: (state, action) => {
+
+    }
+  }),
 }, initialState);
+
+
+function mapDataToMessages(data) {
+  return data.map((message) => {
+      return {
+          type: message.type,
+          payload: {
+              anonymous: message.anonymous,
+              date: Date.parse(message.date),
+              suID: message.suID,
+              username: message.username,
+              message: message.message
+          }
+      }
+  });
+}
