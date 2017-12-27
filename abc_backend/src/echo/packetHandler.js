@@ -1,11 +1,72 @@
 
 import {client as RECEIVE, server as SEND} from './packetTypes';
 import * as helper from './helper';
-// import error from './error';
+import error from './error';
 // import validate from './validate';
 import channel from './channel';
 // import session from './session';
-// import Message from '../models/message';
+import Message from 'db/models/Message';
+import User from 'db/models/User';
+
+const auth = async (connection, payload) => {
+    const ch = channel.get(connection.data.channel);
+    
+    console.log(ch);
+    // anonymous identity
+    if (payload.anonymous && 0) { // later
+        // connection.data.username = session.getAnonymousName(payload.sessionID, connection.data.channel);
+        connection.data.anonymous = true;
+        connection.data.lastMessageDate = null;
+    } else {
+        const account = await User.findById(payload.sessionID);        
+        if (!account) {
+            // username not found
+            return helper.emit(connection, error(2, RECEIVE.AUTH));
+        }
+
+        // account is valid
+        const username1 = account.displayName;
+        // find the lastMessage
+        console.log('[1:]'+username1);
+        const msg = await Message.getLastMessage({channel: connection.data.channel, username: username1});
+        
+        if(!msg) {
+            connection.data.lastMessageDate = null;
+        } else {
+            connection.data.lastMessageDate = msg.date;
+        }
+        console.log('[2:]'+username1);
+        connection.data.username = username1;
+        connection.data.userId = account._id;
+        connection.data.anonymous = false;
+    }
+    console.log('[3:]');
+    connection.data.sessionID = payload.sessionID;
+    connection.data.valid = true;
+    ch.validate(connection.id);
+    console.log('[4:]');
+    console.log(ch);
+    console.log('[5:]');
+    console.log(connection);
+
+    helper.emit(connection, helper.createAction(SEND.SUCCESS.AUTH, {username: connection.data.username}));
+
+    console.log('[6:]');
+    // handles multiple window
+    if (ch.countUser(connection.data.username) !== 1) {
+        return;
+    }
+
+    console.log('[7:]');
+    // broadcast that user has joined
+    ch.broadcast(helper.createAction(SEND.JOIN, {
+        anonymous: connection.data.anonymous,
+        username: connection.data.username,
+        date: (new Date()).getTime(),
+        suID: helper.generateUID()
+    }));
+
+}
 
 const test = (connection, payload) => {
   const ch = channel.get(payload.channel);
@@ -26,6 +87,7 @@ const test1 = (connection, payload) => {
       console.log('check session fail');
       return;
   }
+  
 
   if(connection.data.counter > 10) {
       connection.data.counter = 20;
@@ -61,6 +123,7 @@ const test1 = (connection, payload) => {
 export default function packetHandler(connection, packet) {
   
       // log the packet (only in dev mode)
+      console.log('packet');
       if (process.env.NODE_ENV === 'development') {
           helper.log(packet);
       }
@@ -86,9 +149,9 @@ export default function packetHandler(connection, packet) {
               // service.enter(connection, o.payload);
               test(connection, o.payload);
               break;
-          // case RECEIVE.AUTH:
-          //     service.auth(connection, o.payload);
-          //     break;
+          case RECEIVE.AUTH:
+              auth(connection, o.payload);
+              break;
           case RECEIVE.MSG:
               test1(connection, o.payload);
               break;

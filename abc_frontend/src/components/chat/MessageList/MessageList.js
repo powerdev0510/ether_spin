@@ -36,10 +36,10 @@ class MessageList extends Component {
     render() {
         const {data, showLoader} = this.props;
         const {mapToChunks} = this;
-
+        const showLoader1 = false;
         return (
             <div className={cx('message-list')}>
-                { showLoader ? <Loader/> : undefined }
+                { showLoader1 ? <Loader/> : undefined }
                 {mapToChunks(data)}
             </div>
         );

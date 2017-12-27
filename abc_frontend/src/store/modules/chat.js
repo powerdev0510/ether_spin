@@ -35,7 +35,6 @@ export const removeMessage = createAction(REMOVE_MESSAGE);
 
 // initial state
 
-
 const initialState = Map({
   test: Map({
     mode: false
@@ -87,6 +86,24 @@ export default handleActions({
     return initialState.setIn(['info', 'username'], action.payload);
     // return state.setIn(['test', 'mode'], action.payload);
   },
+  
+  [SET_SOCKET_STATE]: (state, action) => {
+    return state.setIn(['chat', 'socket'], action.payload);
+    // return state.setIn(['test', 'mode'], action.payload);
+  },
+
+  [WRITE_MESSAGE]: (state, action) => {
+    
+    const oldChatData = state.getIn(['chat', 'data']).toJS();
+    const state1 = state.setIn(['chat', 'data'], 
+                  fromJS( [...oldChatData, {...action.payload, temp: true } ] ) 
+                );
+    // console.log(temp);
+    const temp = state1.getIn(['chat', 'tempDataIndex']).toJS();
+    
+    return state1.setIn(['chat', 'tempDataIndex'], fromJS([...temp, state1.getIn(['chat', 'data']).toJS().length]));
+  },
+
   [RECEIVE_REALTIME_DATA]: (state, action) => {
     // return {...state};
     console.log(action.payload);

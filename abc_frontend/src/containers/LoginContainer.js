@@ -23,7 +23,7 @@ export default connect(
     status: {
         logged: state.auth.getIn(['session', 'logged']),
         submitting: state.auth.get('submitStatus'),
-        session: state.auth.get('session').toJS   
+        session: state.auth.get('session').toJS()   
     }
   }),
   (dispatch) => ({

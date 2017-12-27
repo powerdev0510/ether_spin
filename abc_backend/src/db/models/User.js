@@ -272,4 +272,10 @@ User.methods.generateToken = function() {
 //   }).exec();
 // };
 
+User.statics.findById = function(id) {
+  return this.findOne({
+    _id: id
+  });
+};
+
 module.exports = mongoose.model('User', User);

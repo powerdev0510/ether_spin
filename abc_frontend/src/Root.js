@@ -9,6 +9,10 @@ import en from 'react-intl/locale-data/en';
 import ko from 'react-intl/locale-data/ko';
 import getLang from 'helpers/getLang';
 import storage from 'helpers/storage';
+import * as socket from 'socket';
+
+// socket.configure(intl);
+socket.init();
 
 addLocaleData([...en, ...ko]);
 

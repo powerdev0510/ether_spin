@@ -9,11 +9,12 @@ import * as AuthAPI from 'api/auth';
 const SUBMIT = 'register/SUBMIT';
 const INITIALIZE = 'register/INITIALIZE';
 const SET_SUBMIT_STATUS = 'register/SET_SUBMIT_STATUS';
-
+const RESET_REGISTER_STATUS = 'register/RESET_REGISTER_STATUS';
 // actions
 export const submit = createAction(SUBMIT, AuthAPI.localRegister);
 export const initialize = createAction(INITIALIZE);
 export const setSubmitStatus = createAction(SET_SUBMIT_STATUS);
+export const resetRegisterStatus = createAction(RESET_REGISTER_STATUS);
 
 // initial state
 const intialState = Map({
@@ -32,6 +33,9 @@ export default handleActions({
   [INITIALIZE]: (state, action) => intialState,
   [SET_SUBMIT_STATUS]: (state, action) => {
     return state.set('submitStatus', action.payload);
+  },
+  [RESET_REGISTER_STATUS]: (state, action) => {
+    return intialState;
   },
   ...pender({
     type: SUBMIT,

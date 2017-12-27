@@ -43,13 +43,13 @@ class Register extends Component {
 
     leaveTo = ({
         path,
-        express = false
+        express = true
     }) => {
         this.setState({animate: true, path});
 
         if (express) {
             if (process.env.NODE_ENV === 'development') {
-                document.location.href = "http://localhost:8080" + path;
+                document.location.href = "http://192.168.0.116:3000" + path;
             } else {
                 document.location.href = path;
             }
@@ -135,7 +135,7 @@ class Register extends Component {
         AuthActions.setSubmitStatus(false);
         notify({type: 'success', message: formatMessage(messages.success, {name: username})});
         //toastr.success(`Hello, ${firstName}! Please sign in.`);
-        // this.leaveTo('/auth');
+        this.leaveTo({path: '/login'});
 
     }
 
@@ -251,7 +251,7 @@ class Register extends Component {
                             error={formError}
                             onKeyPress={handleKeyPress}/>
                         <div className="side-message">{formatMessage(messages.already)}&nbsp;
-                            <a onClick={() => this.leaveTo({path: "/auth"})}>{formatMessage(messages.logIn)}</a>
+                            <a onClick={() => this.leaveTo({path: "/login"})}>{formatMessage(messages.logIn)}</a>
                         </div>
                     </div>
                 </div>

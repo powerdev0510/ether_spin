@@ -9,6 +9,7 @@ const cx = classNames.bind(styles);
 const PageTemplate = ({header, children, responsive, padding}) => {
   return (
     <div className={cx('page')}>
+      <div className={cx('image')} />
       <header>
         {header}
       </header>
@@ -18,7 +19,7 @@ const PageTemplate = ({header, children, responsive, padding}) => {
       })}>
         {children}
       </main>
-      <Footer/>
+      {/* <Footer/> */}
     </div>
   );
 };

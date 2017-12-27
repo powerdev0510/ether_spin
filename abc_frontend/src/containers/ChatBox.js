@@ -12,6 +12,10 @@ import * as socket from 'socket';
 import * as socketHelper from 'socket/helper';
 import sender from 'socket/packetSender';
 import {client as SEND} from 'socket/packetTypes';
+import notify from 'helpers/notify';
+
+import {injectIntl, defineMessages} from 'react-intl';
+import { prepareMessages } from 'locale/helper';
 
 class ChatBox extends Component {
 
@@ -40,6 +44,7 @@ class ChatBox extends Component {
         // const {params, ChannelActions, intl} = this.props;
         // const { ChatActions } = this.props;
         // console.log(this.props);
+        const {intl} = this.props;
 
         // const promises = [
         //     ChannelActions.getRecentMsg(params.username),
@@ -52,8 +57,9 @@ class ChatBox extends Component {
         //     console.log(e);
         // }
 
-        socket.init();
+        // socket.init();
         // this.handleShowStatusMessage();
+        socket.configure(intl);
     }
 
     handleFailure = () => {
@@ -64,6 +70,12 @@ class ChatBox extends Component {
     }
     handleSend = (message) => {
         console.log('handleSend evented!');
+        const { sessionID, logged } = this.props.status.session;
+
+        if(!sessionID || !logged) {
+            notify({type: 'error', message: 'Please log in'});
+            return;
+        }
 
         // const {status, ChannelActions, FormActions} = this.props;
         const {status, ChatActions} = this.props;
@@ -128,8 +140,8 @@ export default connect(
         status: {
         // channelName: state.channel.info.username,
         // chatState: state.ui.channel.chat,
-        // session: state.auth.session,
-        socket: state.chat.getIn(['chat','socket']).toJS(),
+        session: state.auth.get('session').toJS(),
+        socket: state.chat.getIn(['chat','socket']),
         identity: state.chat.getIn(['chat','identity']),
         chatData: state.chat.getIn(['chat','data']).toJS(),
         // tempDataIndex: state.channel.chat.tempDataIndex,
@@ -141,10 +153,10 @@ export default connect(
         // onlineList: state.ui.channel.chat.onlineList,
         // statusMessage: state.channel.chat.statusMessage,
         // statusMessageVisibility: state.ui.channel.chat.statusMessage
-        username : state.chat.get(['info', 'username'])
+        username : state.chat.get(['info', 'username']),
         }
     }),
     (dispatch) => ({
       ChatActions: bindActionCreators(chatActions, dispatch)
     })
-  )(ChatBox);
+  )(injectIntl(ChatBox));

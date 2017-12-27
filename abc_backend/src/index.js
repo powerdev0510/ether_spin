@@ -25,7 +25,8 @@ app.use((ctx, next) => {
   const allowedHosts = [
     'bitimulate.com',
     's3.bitimulate.com.s3-website.ap-northeast-2.amazonaws.com',
-    'localhost'
+    'localhost',
+    '192.168.0.116'
   ];
   const origin = ctx.header['origin'];
   allowedHosts.every(el => {
@@ -45,7 +46,11 @@ app.use((ctx, next) => {
 
 /* SETUP MIDDLEWARE */
 // var bodyParser = require('koa-bodyparser');
+const jwtMiddleware = require('lib/middlewares/jwt');
+
 app.use(bodyParser()); //parse json
+app.use(jwtMiddleware);
+
 
 // set route for api
 const api = require('./api');

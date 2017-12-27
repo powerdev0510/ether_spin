@@ -6,6 +6,9 @@ import {storage} from 'helpers';
 import notify from 'helpers/notify'
 import {FormattedMessage, injectIntl, defineMessages} from 'react-intl';
 
+// socket
+import sender from 'socket/packetSender';
+
 import './Login.scss';
 
 const messages = defineMessages({
@@ -49,7 +52,7 @@ class Login extends Component {
 
         if (express) {
             if (process.env.NODE_ENV === 'development') {
-                document.location.href = "http://localhost:4000" + path;
+                document.location.href = "http://192.168.0.116:3000" + path;
             } else {
                 document.location.href = path;
             }
@@ -58,7 +61,12 @@ class Login extends Component {
         setTimeout(() => this.setState({leave: true}), 700)
     }
 
-
+    connectToChatRoom = () => {
+        const { status } = this.props;
+       
+        const { sessionID } = status.session;
+        sender.auth(sessionID, false);
+    }
     handleSubmit = async () => {
         const {form, status, FormActions, AuthActions, intl: {
                 formatMessage
@@ -99,12 +107,15 @@ class Login extends Component {
         // } else {
         //     this.leaveTo({path: '/'});
         // }
+        this.leaveTo({path: '/chat'});
 
         // toastr.success(`Hello,
         // ${this.props.status.session.user.common_profile.givenName}!`);
         notify({type: 'success', message: formatMessage(messages.greeting, {name: username})});
         // storage.set('session', this.props.status.session);
 
+        this.connectToChatRoom();
+        
         AuthActions.setSubmitStatus(false);
 
     }
@@ -140,7 +151,7 @@ class Login extends Component {
                             onSubmit={handleSubmit}
                             onKeyPress={handleKeyPress}/>
                         <div className="login-footer">
-                            <p><FormattedMessage id="Login.newHere"/>&nbsp;<a onClick={() => this.leaveTo({path: '/auth/register'})}>
+                            <p><FormattedMessage id="Login.newHere"/>&nbsp;<a onClick={() => this.leaveTo({path: '/signup'})}>
                                     <FormattedMessage id="Login.createAccount"/></a>
                             </p>
                             <p>

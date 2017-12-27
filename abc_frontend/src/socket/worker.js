@@ -28,6 +28,8 @@ const worker = {
 
   assign: (packet) => {
     packets.push(packet);
+    console.log('worker assign --------');
+    console.log(packet);
   }
 };
 

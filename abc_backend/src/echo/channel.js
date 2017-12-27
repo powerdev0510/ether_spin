@@ -1,5 +1,5 @@
 import _ from 'lodash';
-// import Message from './../models/message.js';
+import Message from 'db/models/Message';
 import { server as SEND } from './packetTypes';
 import {log, generateUID} from './helper';
 // import Activity from '../models/activity';
@@ -45,6 +45,8 @@ function Channel(name) {
 
     this.validate = (userId) => {
         // handles multiple window
+        console.log('channel validate');
+        console.log(userId);
         if(!this.usernames[sockets[userId].data.username]){
             this.usernames[sockets[userId].data.username] = 1;
         } else {
@@ -126,13 +128,13 @@ function Channel(name) {
                 () => {
                     log('Channel ' + this.name + ' is sleeping');
                     this.sleep = true;
-/*                    
+                    
                     Message.write({
                         suID: generateUID(),
                         type: "SLEEP",
                         channel: this.name
                     });
-*/                    
+
                 }, 1000 * 60 * 60// 1 hour
             )
         } else {
@@ -218,11 +220,11 @@ channel.remove = (name) => {
     channels[name].killChannelTimeout = setTimeout(
         () => {
             clearTimeout(channels[name].timeout);
-            // Message.write({
-            //     suID: generateUID(),
-            //     type: "SLEEP",
-            //     channel: name
-            // });
+            Message.write({
+                suID: generateUID(),
+                type: "SLEEP",
+                channel: name
+            });
 
             delete channels[name];
             log(name + ' channel is dying..');

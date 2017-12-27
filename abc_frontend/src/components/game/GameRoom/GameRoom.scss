@@ -1,0 +1,58 @@
+.pie-chart{
+  width: 200px;
+  transform: scale(2);
+  position: relative;
+  left: 100px;
+
+}
+.status{
+  position: relative;
+  left:130px;
+  top: 190px;
+  color: black;
+  // text-align: center;
+  // display: flex;
+  // flex-direction: column;
+  // justify-content: center;
+  .gameinfo{
+    font-size:30pt;
+    display: flex;
+    .present{
+      font-size:58pt;
+      font-weight: bolder;
+      color:blue;
+      width:80px;
+      text-align: right;
+      margin-right: 10px;
+    }
+    .total{
+      color: material('grey', '100');
+      width:50px;
+    }
+  }
+  .timer{
+    margin-top: 33px;
+    margin-left: 62px;
+    font-size: 1rem;
+    span{
+      text-align: center;
+    }
+  }
+}
+.spin-controller{
+  position: absolute;
+  top: 49%;
+  left: 40%;
+  transform: scale(2);
+}
+.spinimg{
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  img{
+    transition: transform 0.75s cubic-bezier(0.39, 0.98, 0.49, 0.97);
+    &.spin{
+      transform: rotate(10232.3deg);
+    }
+  }
+}
