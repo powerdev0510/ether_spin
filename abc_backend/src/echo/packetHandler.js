@@ -78,14 +78,13 @@ const test = (connection, payload) => {
       userList: ch.getUserList()
   }));
 }
-const test1 = (connection, payload) => {
+const message = (connection, payload) => {
   // check session validity
   console.log('check session validaity');
   // console.log(connection);
-  if (!connection.data.valid && 0) {
-      // return helper.emit(connection, error(1, RECEIVE.MSG));
-      console.log('check session fail');
-      return;
+  if (!connection.data.valid) {
+    console.log('check session fail');
+    return helper.emit(connection, error(1, RECEIVE.MSG));
   }
   
 
@@ -94,16 +93,15 @@ const test1 = (connection, payload) => {
       setTimeout(()=>{
           connection.data.counter = 0;
       }, 5000);
-      // return helper.emit(connection, error(3));
-      return;
+      return helper.emit(connection, error(3));
   }
 
   chatCount(connection);
   const ch = channel.get(connection.data.channel);
 
   ch.broadcast(helper.createAction(SEND.MSG, {
-      anonymous: true, //connection.data.anonymous,
-      username: '', // connection.data.username,
+      anonymous: connection.data.anonymous,
+      username: connection.data.username,
       message: payload.message,
       date: (new Date()).getTime(),
       uID: payload.uID,
@@ -153,10 +151,10 @@ export default function packetHandler(connection, packet) {
               auth(connection, o.payload);
               break;
           case RECEIVE.MSG:
-              test1(connection, o.payload);
+              message(connection, o.payload);
               break;
           default:
-              // helper.emit(connection, error(0));
+              helper.emit(connection, error(0));
               break;
       }
   
