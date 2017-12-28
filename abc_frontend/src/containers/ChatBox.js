@@ -75,12 +75,37 @@ class ChatBox extends Component {
         socket.configure(intl);
     }
 
-    handleFailure = () => {
-        console.log('handleFailure evented!');
+    handleFailure = (index) => {
+        const {ChatActions} = this.props;
+        ChatActions.messageFailure(index);
     }
-    handleRemove = () => {
-        console.log('handleRemove evented!');
+
+    handleRemove = (index) => {
+        console.log('handleRemove evented');
+
+        const {ChatActions} = this.props;
+        ChatActions.removeMessage(index);
     }
+
+    handleScroll = (e) => {
+
+        const scrollTop = this.scrollBox.getScrollTop();
+        const scrollHeight = this.scrollBox.getScrollHeight();
+        const clientHeight = this.scrollBox.getClientHeight();
+
+        if(scrollTop < 60 && !this.state.loading && !this.props.status.top) {
+            console.log('loading!');
+            this.setState({
+                loading: true,
+                prevScrollHeight: scrollHeight
+            });
+            this.loadPrevious();
+        }
+
+        console.log(scrollTop, scrollHeight, clientHeight)
+    }
+
+
     handleSend = (message) => {
         console.log('handleSend evented!');
         const { sessionID, logged } = this.props.status.session;

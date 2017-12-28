@@ -160,6 +160,43 @@ export default handleActions({
     return state.setIn(['chat', 'data'], fromJS([...temp, ...action.payload]));
   },
 
+  [MESSAGE_FAILURE] : (state, action) => {
+    // payload: index
+    const { payload } = action;
+    const chat_data = state.getIn(['chat', 'data']).toJS();
+    const tempDataIndex = state.getIn(['chat', 'tempDataIndex']).toJS();
+
+    let index = null;
+    for (let i = 0; i < tempDataIndex.length; i++) {
+        if (tempDataIndex[i] === payload) {
+            index = i;
+        }
+    }
+
+    return state.setIn(['chat', 'data'], fromJS([...chat_data.slice(0, payload)
+                                         , {...chat_data[payload], failed: true }
+                                         , ...chat_data.slice(payload + 1, chat_data.length)
+                                         ])
+                      ).setIn(['chat', 'tempDataIndex'], fromJS([...tempDataIndex.slice(0, index),
+                                                          ...tempDataIndex.slice(index + 1, tempDataIndex.length)]));
+
+
+  },
+
+  [REMOVE_MESSAGE] : (state, action) => {
+    // payload: index
+    const { payload } = action;
+    const chat_data = state.getIn(['chat', 'data']).toJS();
+
+    return state.setIn(['chat', 'data'], fromJS([...chat_data.slice(0, payload)
+                                         , ...chat_data.slice(payload + 1, chat_data.length)
+                                         ])
+                      );
+
+
+  },
+
+
   ...pender({
     type: GET_RECENT_MSG,
     onSuccess: (state, action) => {
