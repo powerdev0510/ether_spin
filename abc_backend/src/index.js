@@ -7,6 +7,8 @@ import Koa from 'koa';
 import Router from 'koa-router';
 
 import echo from './echo';
+import game from './game';
+
 import bodyParser from 'koa-bodyparser';
 
 // import db from './db';
@@ -62,6 +64,7 @@ const port = process.env.PORT || 3000;
 
 var server = http.createServer(app.callback());
 echo.installHandlers(server, { prefix: '/echo' });
+game.installHandlers(server, { prefix: '/game' });
 
 server.listen(port, () => {
     console.log(`ABC is listening to port ${port}`);
