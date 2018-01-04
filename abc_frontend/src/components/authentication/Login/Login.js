@@ -53,7 +53,7 @@ class Login extends Component {
         if (express) {
             alert('express in');
             if (process.env.NODE_ENV === 'development') {
-                document.location.href = "http://192.168.0.116:3000" + path;
+                document.location.href = "http://18.217.245.201:3000" + path;
             } else {
                 document.location.href = path;
             }

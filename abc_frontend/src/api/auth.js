@@ -5,7 +5,7 @@ export const localRegister = ({
     // email,
     displayName,
     password    
-}) => axios.post('http://192.168.0.116:8080/api/v1.0/auth/register/local', {
+}) => axios.post('http://18.217.245.201:8080/api/v1.0/auth/register/local', {
     displayName,
     // email,
     password
