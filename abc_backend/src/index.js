@@ -32,7 +32,8 @@ app.use((ctx, next) => {
     'bitimulate.com',
     's3.bitimulate.com.s3-website.ap-northeast-2.amazonaws.com',
     'localhost',
-    '192.168.0.116'
+    '192.168.0.116',
+    '18.217.245.201'
   ];
   const origin = ctx.header['origin'];
   allowedHosts.every(el => {
