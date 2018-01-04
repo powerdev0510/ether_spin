@@ -11,7 +11,7 @@ game.get('/', (ctx) => {
   };
 });
 
-game.get('/find/type/:type', needAuth, gameCtrl.findGame);
+game.get('/find/type/:type', gameCtrl.findGame);
 game.get('/create/type/:type', needAuth, gameCtrl.createGame);
 game.post('/deposit', needAuth, gameCtrl.deposit);
 game.get('/id/:id', gameCtrl.getGameData);
