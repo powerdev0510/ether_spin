@@ -51,6 +51,7 @@ class Login extends Component {
         this.setState({animate: true, path});
 
         if (express) {
+            alert('express in');
             if (process.env.NODE_ENV === 'development') {
                 document.location.href = "http://192.168.0.116:3000" + path;
             } else {
@@ -95,19 +96,21 @@ class Login extends Component {
             return;
         }
 
-        // if(this.props.location.state.prevPath) {     this.leaveTo({path:
-        // this.props.location.state.prevPath}) } else {     this.leaveTo({path: '/'});
-        // }
-
-        // const redirect = storage.get('redirect');
-        // if (redirect) {
-        //     // redirect and clear it
-        //     this.leaveTo({path: redirect.prevPath});
-        //     storage.remove('redirect');
-        // } else {
+        // if(this.props.location.state.prevPath) {     
+        //     this.leaveTo({path: this.props.location.state.prevPath}) 
+        // } else { 
         //     this.leaveTo({path: '/'});
         // }
-        this.leaveTo({path: '/chat'});
+
+        const redirect = storage.get('redirect');
+        if (redirect) {
+            // redirect and clear it
+            this.leaveTo({path: redirect.prevPath});
+            storage.remove('redirect');
+        } else {
+            this.leaveTo({path: '/'});
+        }
+        // this.leaveTo({path: '/'});
 
         // toastr.success(`Hello,
         // ${this.props.status.session.user.common_profile.givenName}!`);

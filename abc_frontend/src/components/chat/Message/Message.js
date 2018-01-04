@@ -52,8 +52,8 @@ class Message extends Component {
     }
 
     generateColor = (username) => {
-        console.log('generateColor++++++++++++++++++++++++')
-        console.log(username, this.props.channel);
+        // console.log('generateColor++++++++++++++++++++++++')
+        // console.log(username, this.props.channel);
 
         let alteredCharSum = Math.pow(charSum(this.props.channel) + 31 * charSum(username), 3) + '';
         alteredCharSum = alteredCharSum.slice(-6);

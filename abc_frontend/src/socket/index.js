@@ -28,19 +28,6 @@ function createAction(type, payload) {
   return {type, payload};
 }
 
-
-async function start() {
-  const channel = 'aaa';
-  send(createAction("ENTER", {channel}));
-
-  const sessionID = (new Date()).toString(); //"dHkxl0zudajC19164Yqx2lQTJC94LEcN";
-
-  send(createAction("AUTH", {
-      sessionID,
-      anonymous: true
-  }));
-}
-
 export const configure = (intl) => {
   _intl = intl;
   handler.configure(intl);
@@ -62,29 +49,9 @@ export const init = () => {
       }
     }
     reconnected = false;
-      // start();
   }
 
   socket.onmessage = (e) => {
-    // console.log('[SOCKET] message evented');
-
-    // if(process.env.NODE_ENV === 'development') {
-    //   // helper.log(e.data);
-    //   console.log(e.data);
-    // }
-    
-    // try{
-    //   const o = JSON.parse(e.data);
-
-    //   if (o && typeof o === "object") {
-    //     if(o.type === "MSG"){
-    //       Worker.assign(o);
-    //     }
-    //   }
-    // }catch (e) {
-    //   console.log('packet parse error!');
-    //   console.log(e);
-    // }
     if(process.env.NODE_ENV === 'development') {
         helper.log(e.data);
     }

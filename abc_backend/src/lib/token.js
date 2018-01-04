@@ -19,6 +19,7 @@ function generateToken(payload, subject) {
 }
 
 function decodeToken(token) {
+  const { JWT_SECRET: secret } = process.env;
   return new Promise(
     (resolve, reject) => {
       jwt.verify(token, secret, (error, decoded) => {

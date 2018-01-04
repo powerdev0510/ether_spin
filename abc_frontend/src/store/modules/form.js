@@ -84,7 +84,11 @@ const initialState = Map({
 
     channelSetting: {
         statusMessage: ''
-    }
+    },
+    deposit: Map({
+        balance: '500',
+        amount: ''
+    }),
 });
 
 // reducer

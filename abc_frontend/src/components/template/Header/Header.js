@@ -9,7 +9,7 @@ const Header = ({onClickButton}) => {
   return (
     <div className={cx('header')}>
       <div>
-        <Link to="/chat">
+        <Link to="/">
           <div className={cx('loger')} >
             <div className = 'markimg'/>
             <div className = 'marktxt'>

@@ -2,6 +2,7 @@ const { generateToken, decodeToken } = require('../token');
 
 module.exports = async (ctx, next) => {
   const token = ctx.cookies.get('access_token');
+
   if(!token) { 
     // if there is no token, skip!
     ctx.request.user = null;

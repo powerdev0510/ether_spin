@@ -10,7 +10,7 @@ function emit(connection ,data) {
   connection.write(JSON.stringify(data));
 }
 
-function Room() {
+function Room(name) {
   this.name = name;
   this.users = []; // stores userId
   this.usernames = {}; // stores username
@@ -58,6 +58,8 @@ function Room() {
 
   //broadcast the data to this Channel
   this.broadcast = async (data, connection) => {
+    console.log('<==============>[broadcast]<===================>');
+    console.log(this.users.length);
     for (let i = 0; i < this.users.length; i ++) {
       emit(sockets[this.users[i]], data);
     }
@@ -88,8 +90,8 @@ function Room() {
     }
 */
   }
-/*
-  this.countuser = (username) => {
+
+  this.countUser = (username) => {
     return this.usernames[username];
   }
 
@@ -117,7 +119,6 @@ function Room() {
 
     return userList; 
   }
-*/
 
 }
 function room(_sockets) {
@@ -126,11 +127,12 @@ function room(_sockets) {
 
 room.create = async (name) => {
   rooms[name] = new Room(name);
-  rooms[name].channelId = 'all';
+  // rooms[name].channelId = 'all';
   return true;
 }
 
 room.remove = (name) => {
+  //kill channel when there is no new user within 1 minutes.
   rooms[name].killChannelTimeout = setTimeout(
     () => {
       clearTimeout(rooms[name].timeout);
@@ -151,5 +153,6 @@ room.get = (name) => {
 
   return rooms[name];
 }
+
 
 export default room;

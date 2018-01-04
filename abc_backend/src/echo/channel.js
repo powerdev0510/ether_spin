@@ -216,7 +216,10 @@ channel.create = async (name) => {
 
 channel.remove = (name) => {
     // kill channel when there is no new user within 1 minutes.
-    channels[name].killChannelTimeout = setTimeout(
+    console.log('-----------------chanel remove ------------------');
+    console.log(name);
+    console.log( channels['all'].killChannelTimeout);
+    channels['all'].killChannelTimeout = setTimeout(
         () => {
             clearTimeout(channels[name].timeout);
             Message.write({

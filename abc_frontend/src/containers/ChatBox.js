@@ -235,6 +235,15 @@ class ChatBox extends Component {
         </Screen>
         )
     }
+
+    componentWillUnmount() {
+        /*
+        console.log(socket);
+        if (socket.getSocket()) {
+            socket.close();
+        }
+        */
+    }
 }
 
 export default connect(

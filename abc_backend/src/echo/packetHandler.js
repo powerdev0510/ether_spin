@@ -11,7 +11,7 @@ import User from 'db/models/User';
 const auth = async (connection, payload) => {
     const ch = channel.get(connection.data.channel);
     
-    console.log(ch);
+    // console.log(ch);
     // anonymous identity
     if (payload.anonymous && 0) { // later
         // connection.data.username = session.getAnonymousName(payload.sessionID, connection.data.channel);
@@ -27,7 +27,7 @@ const auth = async (connection, payload) => {
         // account is valid
         const username1 = account.displayName;
         // find the lastMessage
-        console.log('[1:]'+username1);
+        // console.log('[1:]'+username1);
         const msg = await Message.getLastMessage({channel: connection.data.channel, username: username1});
         
         if(!msg) {
@@ -35,29 +35,29 @@ const auth = async (connection, payload) => {
         } else {
             connection.data.lastMessageDate = msg.date;
         }
-        console.log('[2:]'+username1);
+        // console.log('[2:]'+username1);
         connection.data.username = username1;
         connection.data.userId = account._id;
         connection.data.anonymous = false;
     }
-    console.log('[3:]');
+    // console.log('[3:]');
     connection.data.sessionID = payload.sessionID;
     connection.data.valid = true;
     ch.validate(connection.id);
-    console.log('[4:]');
-    console.log(ch);
-    console.log('[5:]');
-    console.log(connection);
+    // console.log('[4:]');
+    // console.log(ch);
+    // console.log('[5:]');
+    // console.log(connection);
 
     helper.emit(connection, helper.createAction(SEND.SUCCESS.AUTH, {username: connection.data.username}));
 
-    console.log('[6:]');
+    // console.log('[6:]');
     // handles multiple window
     if (ch.countUser(connection.data.username) !== 1) {
         return;
     }
 
-    console.log('[7:]');
+    // console.log('[7:]');
     // broadcast that user has joined
     ch.broadcast(helper.createAction(SEND.JOIN, {
         anonymous: connection.data.anonymous,
