@@ -13,6 +13,7 @@
    2. ERC20 smart contract 
       - built with solidty, sell tokens to users by Ethereum when joining game
    3. Game Logic 
-      - It get started when room is full or after certain time passed.
+      
+      - It get started when room is full or after certain time passed.
       - Game core module generate a random ticket number among of sold tickets.
       - User who has the ticket will be winner, thus the probability of winning is bigger as you get more tickets. 
