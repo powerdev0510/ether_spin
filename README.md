@@ -5,6 +5,7 @@
    2. react.js / redux
    3. sockjs
    4. mongodb
+   5. solidity
 
 ## Key Features
    1. Ticket Management 
